@@ -41,7 +41,7 @@ export default definePlugin({
     authors: [{ name: "Etorix", id: 94597845868355584n }],
     settings,
 
-    isPastingDisabled(hasFocus: boolean = false) {
+    isPastingDisabled(isInput: boolean) {
         const pasteBlocked = Date.now() - lastMiddleClickUp < Math.max(settings.store.threshold, 1);
         const { scope } = settings.store;
 
@@ -51,7 +51,7 @@ export default definePlugin({
             return true;
         }
 
-        if (scope === "focus" && !hasFocus) {
+        if (scope === "focus" && !isInput) {
             return true;
         }
 
@@ -78,7 +78,7 @@ export default definePlugin({
             find: "document.addEventListener(\"paste\",",
             replacement: {
                 match: /(?<=paste",(\i)=>{)/,
-                replace: "if($self.isPastingDisabled()){$1.preventDefault?.();$1.stopPropagation?.();return;};"
+                replace: "if($self.isPastingDisabled(false)){$1.preventDefault?.();$1.stopPropagation?.();return;};"
             }
         },
         {
@@ -86,7 +86,7 @@ export default definePlugin({
             find: ",origin:\"clipboard\"});",
             replacement: {
                 match: /(?<="handlePaste",(\i)=>{)(?=var)/,
-                replace: "if($self.isPastingDisabled(this.state?.focused??false)){$1.preventDefault?.();$1.stopPropagation?.();return null;}"
+                replace: "if($self.isPastingDisabled(true)){$1.preventDefault?.();$1.stopPropagation?.();return null;}"
             }
         },
         {
