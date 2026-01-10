@@ -29,7 +29,7 @@ const settings = definePluginSettings({
     },
     threshold: {
         type: OptionType.NUMBER,
-        description: "Milliseconds until pasting is enabled again after a middle click. Smaller values are more convenient to unlock pasting quicker, but run the risk of unlocking pasting before the middle click paste event is fired on slower systems. Experiment to find the smallest value that works reliably on your system.",
+        description: "Milliseconds until pasting is enabled again after a middle click.",
         default: 100,
         onChange(newValue) { if (newValue < 1) { settings.store.threshold = 1; } },
     },
