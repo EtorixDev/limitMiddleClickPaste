@@ -46,22 +46,14 @@ export default definePlugin({
         const { scope } = settings.store;
 
         if (!pasteBlocked) return false;
-
-        if (scope === "always") {
-            return true;
-        }
-
-        if (scope === "focus" && !isInput) {
-            return true;
-        }
+        if (scope === "always") return true;
+        if (scope === "focus" && !isInput) return true;
 
         return false;
     },
 
     onMouseUp: (e: MouseEvent) => {
-        if (e.button === MIDDLE_CLICK) {
-            lastMiddleClickUp = Date.now();
-        }
+        if (e.button === MIDDLE_CLICK) lastMiddleClickUp = Date.now();
     },
 
     start() {
@@ -86,7 +78,7 @@ export default definePlugin({
             find: ",origin:\"clipboard\"});",
             replacement: {
                 match: /(?<="handlePaste",(\i)=>{)(?=var)/,
-                replace: "if($self.isPastingDisabled(true)){$1.preventDefault?.();$1.stopPropagation?.();return null;}"
+                replace: "if($self.isPastingDisabled(true)){$1.preventDefault?.();$1.stopPropagation?.();return;}"
             }
         },
         {
